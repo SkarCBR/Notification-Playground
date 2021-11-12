@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">NotificationsPlayground</string>
+    <string name="deep_linking_schema">https</string>
+    <string name="deep_linking_host_com">despamers.com</string>
+    <string name="deep_linking_path_result">/result</string>
+    <string name="deep_linking_path_special">/special</string>
+    <string name="got_it">Got it!</string>
+    <string name="notification_types">Notification Types</string>
+    <string name="notification_styles">Notification Styles</string>
+
+    <string name="notification_type_standard_text">
+        Standard: Opens destination screen with back button to Main/Parent
+    </string>
+    <string name="notification_type_special_text">
+        Special: Opens one shot, single task destination screen, back goes where user was
+    </string>
+    <string name="notification_type_deeplink_text">
+        Deeplink: System will look for a suitable App to open the provided URL (Default)
+    </string>
+
+    <string name="notification_style_bigtext">
+        Big Text: Large-format notifications that include a lot of text (Default)
+    </string>
+    <string name="notification_style_bigpicture">
+        Big Picture: Large-format notifications that include a large image attachment.
+        \nRecommended sizes:\n
+        - Minimum - 512x256\n
+        - Balanced - 1024x512\n
+        - Maximum - 2048x1024\n
+        Ratio - 2:1
+    </string>
+    <string name="notification_style_inbox">
+        Inbox: Large-format notifications that include a list of (up to 5) strings.
+    </string>
+    <string name="notification_style_custom">
+        Custom: Notification style for custom views that are decorated by the system.
+    </string>
+</resources>

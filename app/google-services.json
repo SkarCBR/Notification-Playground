@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "852142035367",
+    "project_id": "notifications-playground-7d1f2",
+    "storage_bucket": "notifications-playground-7d1f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852142035367:android:e6fe7e40826c1619ffa682",
+        "android_client_info": {
+          "package_name": "com.mrskar.notificationsplayground"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852142035367-v3qj1lc407fcv1oe7uhqoq21qs31jts0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-EPZFudIkLLdp_4pGXciPsGoWgHkSKI4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852142035367-v3qj1lc407fcv1oe7uhqoq21qs31jts0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -70,6 +70,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.0.5")
     debugImplementation("androidx.compose.ui:ui-tooling:1.0.5")
-    implementation("io.coil-kt:coil:1.4.0")
+    implementation("io.coil-kt:coil-compose:1.4.0")
 
 }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mrskar.notificationsplayground.models.NotificationData
@@ -50,8 +49,7 @@ fun NotificationDataComponent(
                         .padding(8.dp)
                         .fillMaxWidth()
                 ) {
-                    Text(modifier = Modifier.align(CenterVertically), text = "Image: ")
-                    RequestContentPermission(onImageSelected = {
+                    RequestContentComponent(onImageSelected = {
                         if (it != null) {
                             notificationData.imageUri.value = it
                         }

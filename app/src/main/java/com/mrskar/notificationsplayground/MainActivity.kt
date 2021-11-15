@@ -113,7 +113,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun DefaultPreview() {
     val (enableDarkMode, setDarkMode) = remember { mutableStateOf(true) }

@@ -1,19 +1,9 @@
 package com.mrskar.notificationsplayground
 
-import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationChannelGroup
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,35 +20,24 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.app.NotificationCompat
-import androidx.core.app.TaskStackBuilder
 import com.mrskar.notificationsplayground.composables.NotificationsTestComponent
-import com.mrskar.notificationsplayground.models.NotificationData
-import com.mrskar.notificationsplayground.models.NotificationStyles
-import com.mrskar.notificationsplayground.models.NotificationTypes
-import com.mrskar.notificationsplayground.ui.theme.BrandBlue
 import com.mrskar.notificationsplayground.ui.theme.NotificationsPlaygroundTheme
-import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var notificationManagerCompat: NotificationManager
-
-    private val trackingId = Random.nextInt(1000)
+    private lateinit var notificationManager: CustomNotificationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        notificationManagerCompat = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val argument = intent.getStringExtra(ARG_SECTION) ?: ""
         navigateToResult(argument)
-
+        notificationManager = CustomNotificationManagerImpl(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel()
+            notificationManager.createNotificationChannel()
         }
         setContent {
             val icon = mutableStateOf(Icons.Filled.FavoriteBorder)
@@ -96,7 +75,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    NotificationsTestComponent { sendNotification(it) }
+                    NotificationsTestComponent { notificationManager.sendNotification(it) }
                 }
             }
         }
@@ -110,148 +89,6 @@ class MainActivity : ComponentActivity() {
             section == "special" -> {
                 startActivity(Intent(this, SpecialResultActivity::class.java))
             }
-        }
-    }
-
-    private fun sendNotification(notificationData: NotificationData) {
-        val notification = createNotificationWithData(notificationData)
-        notificationManagerCompat.notify(
-            trackingId,
-            notification
-        )
-    }
-
-    @SuppressLint("UnspecifiedImmutableFlag")
-    private fun createNotificationWithData(data: NotificationData): Notification {
-        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.android_masters)
-            .setContentTitle(data.title.value)
-            .setAutoCancel(true)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setContentText(data.message.value)
-            .setContentIntent(getPendingIntent(data.type.value, data.url.value))
-            .setGroup(GROUP_KEY)
-
-        setStyle(builder, data)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setChannelId(CHANNEL_ID)
-        }
-
-        return builder.build()
-    }
-
-    private fun getPendingIntent(type: NotificationTypes, url: String): PendingIntent {
-        return when (type) {
-            NotificationTypes.STANDARD -> {
-                createPendingIntentWithBackStack(url)
-            }
-            NotificationTypes.SPECIAL -> {
-                createPendingIntentSingleTask(url)
-            }
-            NotificationTypes.DEEPLINK -> {
-                createPendingIntentActionView(url)
-            }
-        }
-    }
-
-    private fun createPendingIntentWithBackStack(url: String): PendingIntent {
-        val resultIntent = ResultActivity.buildIntent(this, true)
-            .putExtra(ARG_SECTION, getSectionFromUrl(url))
-
-        return TaskStackBuilder.create(this).run {
-            addNextIntentWithParentStack(resultIntent)
-            getPendingIntent(trackingId, PendingIntent.FLAG_UPDATE_CURRENT)
-        } ?: PendingIntent.getActivity(
-            this,
-            trackingId,
-            resultIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
-    }
-
-    private fun createPendingIntentSingleTask(url: String): PendingIntent {
-        val notifyIntent = SpecialResultActivity.buildIntent(this, true).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra(ARG_SECTION, getSectionFromUrl(url))
-        }
-        return PendingIntent.getActivity(
-            this, trackingId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
-
-    private fun createPendingIntentActionView(url: String): PendingIntent {
-        return PendingIntent.getActivity(
-            this,
-            trackingId,
-            Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                .putExtra(ARG_SECTION, getSectionFromUrl(url)),
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
-    }
-
-    private fun getSectionFromUrl(url: String): String {
-        val sectionData = url.substringAfter(".com/")
-        return sectionData.substringBefore("/")
-    }
-
-    private fun setStyle(builder: NotificationCompat.Builder, data: NotificationData) {
-        val style = when (data.style.value) {
-            NotificationStyles.BIG_TEXT -> {
-                NotificationCompat.BigTextStyle()
-                    .bigText(data.message.value)
-                    .setBigContentTitle(data.message.value)
-            }
-            NotificationStyles.BIG_PICTURE -> {
-                val bitmap = getBitmapPicture(data.imageUri.value)
-                builder.setLargeIcon(bitmap)
-                NotificationCompat.BigPictureStyle()
-                    .bigPicture(bitmap)
-                    .bigLargeIcon(null)
-                    .setBigContentTitle(data.title.value)
-                    .setSummaryText(data.message.value)
-            }
-            NotificationStyles.INBOX -> {
-                NotificationCompat.InboxStyle()
-                    .setBigContentTitle(data.title.value)
-                    .addLine(data.multiMessage[0].value)
-                    .addLine(data.multiMessage[1].value)
-                    .addLine(data.multiMessage[2].value)
-            }
-        }
-        builder.setStyle(style)
-    }
-
-    private fun getBitmapPicture(uri: Uri): Bitmap? {
-        return if (uri != Uri.EMPTY) {
-            if (Build.VERSION.SDK_INT < 28) {
-                MediaStore.Images.Media.getBitmap(contentResolver, uri)
-            } else {
-                val source = ImageDecoder.createSource(contentResolver, uri)
-                ImageDecoder.decodeBitmap(source)
-            }
-        } else {
-            null
-        }
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-            notificationManagerCompat.getNotificationChannel(CHANNEL_ID) == null
-        ) {
-            notificationManagerCompat.createNotificationChannel(
-                NotificationChannel(
-                    CHANNEL_ID,
-                    "Despamers Channel",
-                    NotificationManager.IMPORTANCE_HIGH
-                )
-            )
-            val groupId = "despamers_01"
-            // The user-visible name of the group.
-            val groupName = "Despamers Group"
-            notificationManagerCompat.createNotificationChannelGroup(
-                NotificationChannelGroup(groupId, groupName)
-            )
         }
     }
 
@@ -279,19 +116,19 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {
-    val enableDarkMode = remember { mutableStateOf(false) }
+    val (enableDarkMode, setDarkMode) = remember { mutableStateOf(true) }
     var changeThemeIcon = Icons.Filled.FavoriteBorder
-    NotificationsPlaygroundTheme {
+    NotificationsPlaygroundTheme(darkTheme = enableDarkMode) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 TopAppBar(
                     title = { Text("Notifications Playground") },
-                    backgroundColor = BrandBlue,
+                    backgroundColor = MaterialTheme.colors.secondary,
                     actions = {
                         IconButton(
                             onClick = {
-                                enableDarkMode.value = !enableDarkMode.value
+                                setDarkMode(!enableDarkMode)
                                 changeThemeIcon = Icons.Filled.Favorite
                             }
                         ) {
@@ -308,5 +145,4 @@ private fun DefaultPreview() {
 
 const val ARG_SECTION = "arg_section"
 const val ARG_IS_NOTIFICATION = "arg_is_notification"
-private const val CHANNEL_ID = "TestNotificationsPlayground"
-private const val GROUP_KEY = "com.mrskar.notificationsplayground"
+const val ARG_NOTIFICATION_ORIGIN = "arg_notification_origin"

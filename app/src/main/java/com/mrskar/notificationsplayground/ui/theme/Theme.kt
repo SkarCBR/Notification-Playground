@@ -10,7 +10,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.darkColors
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.lightColors
@@ -18,39 +17,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.mrskar.notificationsplayground.composables.NotificationsTestComponent
 
-private val DarkColorPalette = darkColors(
-    primary = DarkGrey,
-    primaryVariant = Grey,
+private val LightThemeColors = lightColors(
+    primary = BrandBlue,
     onPrimary = White,
+    primaryVariant = LightGrey,
     secondary = BrandBlue,
-    secondaryVariant = BrandBlue,
     onSecondary = White,
+    secondaryVariant = LightGrey,
     error = RedTomato,
     onError = White,
-    onBackground = White,
-    background = Black,
-    surface = DarkGrey,
-    onSurface = White,
-)
-
-private val LightColorPalette = lightColors(
-    primary = White,
-    primaryVariant = White,
-    onPrimary = BrandBlack,
-    secondary = BrandBlue,
-    secondaryVariant = BrandBlue,
-    onSecondary = White,
-    error = RedTomato,
-    onError = White,
-    onBackground = BrandBlack,
     background = Pearl,
-    surface = White,
+    onBackground = BrandBlack,
+    surface = Pearl,
     onSurface = BrandBlack,
+)
+private val DarkThemeColors = darkColors(
+    primary = Color(0xFFbbc3ff),
+    onPrimary = Color(0xFF00159e),
+    primaryVariant = Color(0xFF0022db),
+    secondary = Color(0xFFbbc3ff),
+    onSecondary = Color(0xFF00159e),
+    secondaryVariant = Color(0xFF0022db),
+    error = Color(0xFFffb4a9),
+    onError = Color(0xFF680003),
+    background = BrandBlack,
+    onBackground = LightGrey,
+    surface = BrandBlack,
+    onSurface = LightGrey,
 )
 
 @Composable
@@ -59,9 +56,9 @@ fun NotificationsPlaygroundTheme(
     content: @Composable() () -> Unit
 ) {
     val colors = if (darkTheme) {
-        DarkColorPalette
+        DarkThemeColors
     } else {
-        LightColorPalette
+        LightThemeColors
     }
 
     MaterialTheme(

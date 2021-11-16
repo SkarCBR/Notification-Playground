@@ -97,8 +97,8 @@ class CustomNotificationManagerImpl constructor(
     }
 
     private fun createPendingIntentWithBackStack(url: String): PendingIntent {
-        val resultIntent = ResultActivity.buildIntent(context, true)
-            .putExtra(ARG_SECTION, getSectionFromUrl(url))
+        val resultIntent = ResultActivity
+            .buildIntent(context, true, getSectionFromUrl(url))
 
         return TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(resultIntent)
@@ -112,10 +112,11 @@ class CustomNotificationManagerImpl constructor(
     }
 
     private fun createPendingIntentSingleTask(url: String): PendingIntent {
-        val notifyIntent = SpecialResultActivity.buildIntent(context, true).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra(ARG_SECTION, getSectionFromUrl(url))
-        }
+        val notifyIntent = SpecialResultActivity
+            .buildIntent(context, true, getSectionFromUrl(url))
+            .apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
         return PendingIntent.getActivity(
             context, trackingId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -127,15 +128,14 @@ class CustomNotificationManagerImpl constructor(
             trackingId,
             Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
                 putExtra(ARG_SECTION, getSectionFromUrl(url))
-                putExtra(ARG_NOTIFICATION_ORIGIN, "Azure")
+                putExtra(ARG_IS_NOTIFICATION, true)
             },
-            PendingIntent.FLAG_CANCEL_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
 
     private fun getSectionFromUrl(url: String): String {
-        val sectionData = url.substringAfter(".com/")
-        return sectionData
+        return url.substringAfter(".com/")
     }
 
     private fun setStyle(builder: NotificationCompat.Builder, data: NotificationData) {

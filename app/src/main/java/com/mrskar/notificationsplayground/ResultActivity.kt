@@ -43,9 +43,14 @@ class ResultActivity : ComponentActivity() {
     }
 
     companion object {
-        fun buildIntent(context: Context, comingFromNotification: Boolean): Intent {
+        fun buildIntent(
+            context: Context,
+            comingFromNotification: Boolean,
+            section: String?
+        ): Intent {
             return Intent(context, ResultActivity::class.java).apply {
                 putExtra(ARG_IS_NOTIFICATION, comingFromNotification)
+                putExtra(ARG_SECTION, section)
             }
         }
     }

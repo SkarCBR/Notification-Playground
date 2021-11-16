@@ -33,8 +33,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val argument = intent.getStringExtra(ARG_SECTION) ?: ""
-        navigateToResult(argument)
+        val section = intent.getStringExtra(ARG_SECTION) ?: ""
+        navigateToResult(section, intent.getBooleanExtra(ARG_IS_NOTIFICATION, false))
         notificationManager = CustomNotificationManagerImpl(this)
         val sharedPreferences = getSharedPreferences(
             getString(R.string.sharedpreferences_file), MODE_PRIVATE
@@ -88,13 +88,19 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun navigateToResult(section: String?) {
+    private fun navigateToResult(section: String?, comingFromNotification: Boolean) {
         when {
             section == "result" -> {
-                startActivity(Intent(this, ResultActivity::class.java))
+                startActivity(
+                    ResultActivity.buildIntent(this, comingFromNotification, section)
+                )
             }
             section == "special" -> {
-                startActivity(Intent(this, SpecialResultActivity::class.java))
+                startActivity(
+                    SpecialResultActivity.buildIntent(this, comingFromNotification, section).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                )
             }
         }
     }
@@ -110,8 +116,13 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object {
-        fun buildIntent(context: Context, section: String?): Intent {
+        fun buildIntent(
+            context: Context,
+            comingFromNotification: Boolean,
+            section: String?
+        ): Intent {
             return Intent(context, MainActivity::class.java).apply {
+                putExtra(ARG_IS_NOTIFICATION, comingFromNotification)
                 if (!section.isNullOrEmpty()) {
                     putExtra(ARG_SECTION, section)
                 }

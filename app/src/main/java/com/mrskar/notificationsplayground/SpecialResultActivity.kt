@@ -43,7 +43,7 @@ class SpecialResultActivity : ComponentActivity() {
 
     private fun goToApp() {
         startActivity(
-            MainActivity.buildIntent(this, null)
+            MainActivity.buildIntent(this, false, null)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         )
@@ -52,17 +52,21 @@ class SpecialResultActivity : ComponentActivity() {
 
     private fun goToResult(section: String) {
         startActivity(
-            MainActivity.buildIntent(this, section)
+            MainActivity.buildIntent(this, false, section)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                .putExtras(intent)
         )
         finish()
     }
 
     companion object {
-        fun buildIntent(context: Context, comingFromNotification: Boolean): Intent {
+        fun buildIntent(
+            context: Context,
+            comingFromNotification: Boolean,
+            section: String?
+        ): Intent {
             return Intent(context, SpecialResultActivity::class.java).apply {
                 putExtra(ARG_IS_NOTIFICATION, comingFromNotification)
+                putExtra(ARG_SECTION, section)
             }
         }
     }

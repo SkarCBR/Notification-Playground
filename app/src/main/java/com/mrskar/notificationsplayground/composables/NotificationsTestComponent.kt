@@ -56,21 +56,15 @@ fun NotificationsTestComponent(
             .fillMaxHeight()
     ) {
         Card(elevation = 4.dp) {
-            Column {
-                Row(modifier = Modifier.padding(8.dp)) {
+            Column(modifier = Modifier.padding(8.dp)) {
+                Row(modifier = Modifier.fillMaxWidth()) {
                     Text(text = "Notification Type: ", modifier = Modifier.align(CenterVertically))
                     DropdownPushType(onItemSelected = {
                         notificationData.type.value = it
                     })
                 }
-                Spacer(
-                    modifier = Modifier
-                        .height(2.dp)
-                        .background(MaterialTheme.colors.background))
                 Row(
-                    Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
+                    Modifier.fillMaxWidth()
                 ) {
                     Text(text = "Notification Style: ", modifier = Modifier.align(CenterVertically))
                     DropdownPushStyle(onItemSelected = {

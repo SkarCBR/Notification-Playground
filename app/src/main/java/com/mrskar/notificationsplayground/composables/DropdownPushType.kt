@@ -47,10 +47,11 @@ fun DropdownPushType(onItemSelected: (NotificationTypes) -> Unit) {
                 modifier = Modifier
                     .align(CenterVertically)
                     .clickable(onClick = { expanded = true })
+                    .padding(start = 8.dp)
             )
             IconButton(
                 onClick = { openDialog.value = true },
-                Modifier.padding(start = 16.dp)
+                Modifier.padding(start = 8.dp)
             ) {
                 Icon(Icons.Outlined.Info, null)
             }

@@ -27,6 +27,9 @@ class SpecialResultActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val argument = intent.getStringExtra(ARG_SECTION) ?: ""
         val comingFromNotification = intent.getBooleanExtra(ARG_IS_NOTIFICATION, false)
+        val isDarkMode = getSharedPreferences(
+            getString(R.string.sharedpreferences_file), MODE_PRIVATE
+        ).getBoolean(KEY_DARKMODE, false)
         setContent {
             SpecialResultComponent(
                 sectionToNavigate = argument,

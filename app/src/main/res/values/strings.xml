@@ -35,4 +35,5 @@
     <string name="notification_style_custom">
         Custom: Notification style for custom views that are decorated by the system.
     </string>
+    <string name="sharedpreferences_file">sharedpreferencesfile</string>
 </resources>

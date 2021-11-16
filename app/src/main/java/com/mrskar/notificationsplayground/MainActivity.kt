@@ -36,12 +36,16 @@ class MainActivity : ComponentActivity() {
         val argument = intent.getStringExtra(ARG_SECTION) ?: ""
         navigateToResult(argument)
         notificationManager = CustomNotificationManagerImpl(this)
+        val sharedPreferences = getSharedPreferences(
+            getString(R.string.sharedpreferences_file), MODE_PRIVATE
+        )
+        val isDarkMode = sharedPreferences.getBoolean(KEY_DARKMODE, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannel()
         }
         setContent {
             val icon = mutableStateOf(Icons.Filled.FavoriteBorder)
-            val (enableDarkMode, setDarkMode) = remember { mutableStateOf(false) }
+            val (enableDarkMode, setDarkMode) = remember { mutableStateOf(isDarkMode) }
 
             NotificationsPlaygroundTheme(darkTheme = enableDarkMode) {
                 Scaffold(
@@ -62,6 +66,9 @@ class MainActivity : ComponentActivity() {
                                 IconButton(
                                     onClick = {
                                         setDarkMode(!enableDarkMode)
+                                        sharedPreferences.edit()
+                                            .putBoolean(KEY_DARKMODE, !enableDarkMode)
+                                            .apply()
                                         if (icon.value == Icons.Filled.FavoriteBorder) {
                                             icon.value = Icons.Filled.Favorite
                                         } else {
@@ -145,4 +152,4 @@ private fun DefaultPreview() {
 
 const val ARG_SECTION = "arg_section"
 const val ARG_IS_NOTIFICATION = "arg_is_notification"
-const val ARG_NOTIFICATION_ORIGIN = "arg_notification_origin"
+const val KEY_DARKMODE = "darkmode"

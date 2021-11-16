@@ -16,6 +16,9 @@ class ResultActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val isDarkMode = getSharedPreferences(
+            getString(R.string.sharedpreferences_file), MODE_PRIVATE
+        ).getBoolean(KEY_DARKMODE, false)
         val comingFromNotification = intent.getBooleanExtra(ARG_IS_NOTIFICATION, false)
         setContent {
             val (snackbarVisibleState, setSnackbarState) =

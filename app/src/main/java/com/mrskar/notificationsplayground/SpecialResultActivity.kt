@@ -6,16 +6,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Snackbar
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.mrskar.notificationsplayground.composables.SpecialResultComponent
@@ -25,19 +29,54 @@ class SpecialResultActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val argument = intent.getStringExtra(ARG_SECTION) ?: ""
+        val section = intent.getStringExtra(ARG_SECTION) ?: ""
         val comingFromNotification = intent.getBooleanExtra(ARG_IS_NOTIFICATION, false)
         val isDarkMode = getSharedPreferences(
             getString(R.string.sharedpreferences_file), MODE_PRIVATE
         ).getBoolean(KEY_DARKMODE, false)
         setContent {
-            SpecialResultComponent(
-                sectionToNavigate = argument,
-                comingFromNotification = comingFromNotification,
-                onBackButtonSelected = { goToApp() },
-                onSectionSelected = { goToResult(it) }
-            )
-            BackHandler(enabled = true, onBack = { finish() })
+            val scaffoldState = rememberScaffoldState()
+            NotificationsPlaygroundTheme(darkTheme = isDarkMode) {
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    scaffoldState = scaffoldState,
+                    topBar = {
+                        TopAppBar(
+                            title = { Text("Special Detail") },
+                            backgroundColor = MaterialTheme.colors.secondary,
+                            actions = { },
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = { onBackPressed() }
+                                ) {
+                                    Icon(Icons.Outlined.ArrowBack, null)
+                                }
+                            }
+                        )
+                    }
+                ) {
+                    SpecialResultComponent(
+                        sectionToNavigate = section,
+                        onBackButtonSelected = { goToApp() },
+                        onSectionSelected = { goToResult(it) }
+                    )
+                    LaunchedEffect(comingFromNotification) {
+                        if (comingFromNotification) {
+                            val result = scaffoldState.snackbarHostState.showSnackbar(
+                                message = "Notification selected with section: '$section'",
+                                actionLabel = "Dismiss",
+                                duration = SnackbarDuration.Short
+                            )
+                            when (result) {
+                                SnackbarResult.Dismissed -> {
+                                }
+                                SnackbarResult.ActionPerformed -> {
+                                }
+                            }
+                        }
+                    }
+                }
+                BackHandler(enabled = true, onBack = { finish() })
+            }
         }
     }
 
@@ -75,11 +114,30 @@ class SpecialResultActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {
-    SpecialResultComponent(
-        sectionToNavigate = "result",
-        comingFromNotification = false,
-        onBackButtonSelected = { },
-        onSectionSelected = { }
-    )
-    BackHandler(enabled = true, onBack = { })
+    NotificationsPlaygroundTheme(darkTheme = false) {
+        Scaffold(modifier = Modifier.fillMaxSize(),
+            scaffoldState = rememberScaffoldState(),
+            topBar = {
+                TopAppBar(
+                    title = { Text("Special Detail") },
+                    backgroundColor = MaterialTheme.colors.secondary,
+                    actions = { },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { }
+                        ) {
+                            Icon(Icons.Outlined.ArrowBack, null)
+                        }
+                    }
+                )
+            }
+        ) {
+            SpecialResultComponent(
+                sectionToNavigate = "result",
+                onBackButtonSelected = { },
+                onSectionSelected = { }
+            )
+        }
+        BackHandler(enabled = true, onBack = { })
+    }
 }

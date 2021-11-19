@@ -1,9 +1,12 @@
 package com.mrskar.notificationsplayground.composables
 
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -18,62 +21,71 @@ import androidx.compose.ui.unit.dp
 import com.mrskar.notificationsplayground.models.NotificationData
 import com.mrskar.notificationsplayground.models.NotificationStyles
 import com.mrskar.notificationsplayground.models.NotificationTypes
+import com.mrskar.notificationsplayground.ui.theme.LightGrey
 
 @Composable
 fun NotificationDataComponent(
     notificationData: NotificationData
 ) {
     Card(elevation = 4.dp) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = "Notification Data: ")
-            BigTextMessageComponent(
-                title = "Title: ",
-                message = notificationData.title,
-                maxLines = 1
-            )
-            if (notificationData.multiMessage.isEmpty()) {
+        Column {
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(text = "Notification Data: ")
                 BigTextMessageComponent(
-                    title = "Message: ",
-                    message = notificationData.message,
-                    maxLines = 4
+                    title = "Title: ",
+                    message = notificationData.title,
+                    maxLines = 1
                 )
-            } else {
-                MultiLineMessageComponent(
-                    title = "Text ",
-                    multiMessage = notificationData.multiMessage,
-                    maxLines = 2
-                )
-            }
-            BigTextMessageComponent(
-                title = "Deeplink: ",
-                message = notificationData.url,
-                maxLines = 1
-            )
-            if (notificationData.style.value == NotificationStyles.BIG_PICTURE) {
-                Row(
-                    Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                ) {
-                    RequestContentComponent(onImageSelected = {
-                        if (it != null) {
-                            notificationData.imageUri.value = it
-                        }
-                    })
+                if (notificationData.multiMessage.isEmpty()) {
+                    BigTextMessageComponent(
+                        title = "Message: ",
+                        message = notificationData.message,
+                        maxLines = 4
+                    )
+                } else {
+                    MultiLineMessageComponent(
+                        title = "Text ",
+                        multiMessage = notificationData.multiMessage,
+                        maxLines = 2
+                    )
                 }
-            } else {
-                notificationData.imageUri.value = Uri.EMPTY
+                BigTextMessageComponent(
+                    title = "Deeplink: ",
+                    message = notificationData.url,
+                    maxLines = 1
+                )
+                if (notificationData.style.value == NotificationStyles.BIG_PICTURE) {
+                    Row(
+                        Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth()
+                    ) {
+                        RequestContentComponent(onImageSelected = {
+                            if (it != null) {
+                                notificationData.imageUri.value = it
+                            }
+                        })
+                    }
+                } else {
+                    notificationData.imageUri.value = Uri.EMPTY
+                }
             }
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth(1f)
+                    .background(LightGrey)
+                    .height(4.dp)
+            )
             Column(
                 Modifier
-                    .padding(8.dp)
+                    .padding(16.dp)
                     .fillMaxWidth()
             ) {
                 Text(text = "$notificationData")
                 Text(
                     text = "Intent arguments:\n" +
-                        " -comingFromNotification = true\n" +
-                        " -section = ${notificationData.url.value.substringAfter(".com/", "")}"
+                        " - comingFromNotification = true\n" +
+                        " - section = ${notificationData.url.value.substringAfter(".com/", "")}"
                 )
             }
         }

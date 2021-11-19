@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
             notificationManager.createNotificationChannel()
         }
         setContent {
-            val icon = mutableStateOf(Icons.Filled.FavoriteBorder)
+            val icon = remember { mutableStateOf(Icons.Filled.FavoriteBorder) }
             val (enableDarkMode, setDarkMode) = remember { mutableStateOf(isDarkMode) }
 
             NotificationsPlaygroundTheme(darkTheme = enableDarkMode) {

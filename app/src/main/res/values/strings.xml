@@ -9,20 +9,23 @@
     <string name="notification_styles">Notification Styles</string>
 
     <string name="notification_type_standard_text">
-        Standard: Opens destination screen with back button to Main/Parent
+        Implicit Intent. Opens destination Activity with back button to Main/Parent,
+        adding destination Activity to the top of Back Stack
     </string>
     <string name="notification_type_special_text">
-        Special: Opens one shot, single task destination screen, back goes where user was
+        Implicit Intent. Opens single task destination Activity without adding it to Back Stack,
+        back goes where user was (might be other app)
     </string>
     <string name="notification_type_deeplink_text">
-        Deeplink: System will look for a suitable App to open the provided URL (Default)
+        Explicit Intent. System will look for a suitable App to open the provided URL/URI (Default).
+        Will show a chooser to the user to select the app to do the action.
     </string>
 
     <string name="notification_style_bigtext">
-        Big Text: Large-format notifications that include a lot of text (Default)
+        Large-format notifications that include a lot of text (Default)
     </string>
     <string name="notification_style_bigpicture">
-        Big Picture: Large-format notifications that include a large image attachment.
+        Large-format notifications that include a large image attachment.
         \nRecommended sizes:\n
         - Minimum - 512x256\n
         - Balanced - 1024x512\n
@@ -30,10 +33,7 @@
         Ratio - 2:1
     </string>
     <string name="notification_style_inbox">
-        Inbox: Large-format notifications that include a list of (up to 5) strings.
-    </string>
-    <string name="notification_style_custom">
-        Custom: Notification style for custom views that are decorated by the system.
+        Large-format notifications that include a list of (up to 5) strings.
     </string>
     <string name="sharedpreferences_file">sharedpreferencesfile</string>
 </resources>

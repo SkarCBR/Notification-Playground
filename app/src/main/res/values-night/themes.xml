@@ -1,16 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.NotificationsPlayground" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">?attr/colorPrimary</item>
-        <item name="colorPrimaryVariant">?attr/colorPrimaryVariant</item>
-        <item name="colorOnPrimary">?attr/colorOnPrimary</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">?attr/colorSecondary</item>
-        <item name="colorSecondaryVariant">?attr/colorSecondaryVariant</item>
-        <item name="colorOnSecondary">?attr/colorOnSecondary</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
+    <style name="Theme.NotificationsPlayground" parent="Theme.MaterialComponents.DayNight.DarkActionBar" />
 </resources>

@@ -145,6 +145,7 @@ class CustomNotificationManagerImpl constructor(
             context,
             trackingId,
             Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                putExtra(ARG_URL, url)
                 putExtra(ARG_SECTION, getSectionFromUrl(url))
                 putExtra(ARG_IS_NOTIFICATION, true)
             },

@@ -133,7 +133,7 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 private fun DefaultPreview() {
-    val (enableDarkMode, setDarkMode) = remember { mutableStateOf(true) }
+    val (enableDarkMode, setDarkMode) = remember { mutableStateOf(false) }
     var changeThemeIcon = Icons.Filled.FavoriteBorder
     NotificationsPlaygroundTheme(darkTheme = enableDarkMode) {
         Scaffold(
@@ -160,6 +160,7 @@ private fun DefaultPreview() {
     }
 }
 
+const val ARG_URL = "arg_url"
 const val ARG_SECTION = "arg_section"
 const val ARG_IS_NOTIFICATION = "arg_is_notification"
 const val KEY_DARKMODE = "darkmode"

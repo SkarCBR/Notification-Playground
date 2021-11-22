@@ -1,7 +1,6 @@
 package com.mrskar.notificationsplayground.composables
 
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,10 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
+import androidx.compose.material.Checkbox
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.FloatingActionButtonDefaults
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
@@ -46,7 +45,9 @@ fun NotificationsTestComponent(
             mutableStateOf(NotificationStyles.BIG_TEXT),
             mutableStateOf(NotificationTypes.STANDARD),
             mutableStateOf("https://despamers.com/"),
-            mutableStateOf(Uri.EMPTY))
+            mutableStateOf(Uri.EMPTY),
+            mutableStateOf(true)
+        )
     }
 
     Column(
@@ -63,9 +64,7 @@ fun NotificationsTestComponent(
                         notificationData.type.value = it
                     })
                 }
-                Row(
-                    Modifier.fillMaxWidth()
-                ) {
+                Row(Modifier.fillMaxWidth()) {
                     Text(text = "Notification Style: ", modifier = Modifier.align(CenterVertically))
                     DropdownPushStyle(onItemSelected = {
                         notificationData.style.value = it
@@ -83,6 +82,22 @@ fun NotificationsTestComponent(
                             notificationData.multiMessage.clear()
                         }
                     })
+                }
+                Row(Modifier.fillMaxWidth()) {
+                    Text(
+                        text = if (notificationData.expanded.value) {
+                            "High Priority Channel"
+                        } else {
+                            "Low Priority Channel"
+                        },
+                        modifier = Modifier.align(CenterVertically)
+                    )
+                    Checkbox(
+                        checked = notificationData.expanded.value,
+                        onCheckedChange = {
+                            notificationData.expanded.value = !notificationData.expanded.value
+                        }
+                    )
                 }
             }
         }

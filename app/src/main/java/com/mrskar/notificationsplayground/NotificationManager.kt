@@ -43,16 +43,25 @@ class CustomNotificationManagerImpl constructor(
     }
 
     override fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
-            manager.getNotificationChannel(CHANNEL_ID) == null
-        ) {
-            manager.createNotificationChannel(
-                NotificationChannel(
-                    CHANNEL_ID,
-                    "Despamers Channel",
-                    NotificationManager.IMPORTANCE_HIGH
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (manager.getNotificationChannel(CHANNEL_ID_HIGH) == null) {
+                manager.createNotificationChannel(
+                    NotificationChannel(
+                        CHANNEL_ID_HIGH,
+                        "High Priority Channel",
+                        NotificationManager.IMPORTANCE_HIGH
+                    )
                 )
-            )
+            }
+            if (manager.getNotificationChannel(CHANNEL_ID_LOW) == null) {
+                manager.createNotificationChannel(
+                    NotificationChannel(
+                        CHANNEL_ID_LOW,
+                        "Low Priority Channel",
+                        NotificationManager.IMPORTANCE_LOW
+                    )
+                )
+            }
             val groupId = "despamers_01"
             // The user-visible name of the group.
             val groupName = "Despamers Group"
@@ -64,11 +73,12 @@ class CustomNotificationManagerImpl constructor(
 
     @SuppressLint("UnspecifiedImmutableFlag")
     private fun createNotificationWithData(data: NotificationData): Notification {
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+        val channelId = if (data.expanded.value) CHANNEL_ID_HIGH else CHANNEL_ID_LOW
+        val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.android_masters)
             .setContentTitle(data.title.value)
             .setAutoCancel(true)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(getPriority(data.expanded.value))
             .setContentText(data.message.value)
             .setContentIntent(getPendingIntent(data.type.value, data.url.value))
             .setGroup(GROUP_KEY)
@@ -76,10 +86,17 @@ class CustomNotificationManagerImpl constructor(
         setStyle(builder, data)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setChannelId(CHANNEL_ID)
+            builder.setChannelId(channelId)
         }
 
         return builder.build()
+    }
+
+    private fun getPriority(expanded: Boolean): Int {
+        return when (expanded) {
+            true -> NotificationCompat.PRIORITY_HIGH
+            false -> NotificationCompat.PRIORITY_LOW
+        }
     }
 
     private fun getPendingIntent(type: NotificationTypes, url: String): PendingIntent {
@@ -143,7 +160,7 @@ class CustomNotificationManagerImpl constructor(
             NotificationStyles.BIG_TEXT -> {
                 NotificationCompat.BigTextStyle()
                     .bigText(data.message.value)
-                    .setBigContentTitle(data.message.value)
+                    .setBigContentTitle(data.title.value)
             }
             NotificationStyles.BIG_PICTURE -> {
                 val bitmap = getBitmapPicture(data.imageUri.value)
@@ -179,5 +196,6 @@ class CustomNotificationManagerImpl constructor(
     }
 }
 
-const val CHANNEL_ID = "TestNotificationsPlayground"
+const val CHANNEL_ID_HIGH = "TestNotificationsPlaygroundHigh"
+const val CHANNEL_ID_LOW = "TestNotificationsPlaygroundLow"
 private const val GROUP_KEY = "com.mrskar.notificationsplayground"

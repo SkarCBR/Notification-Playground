@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                             actions = {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     IconButton(
-                                        onClick = { openNotificationsConfig() }
+                                        onClick = { openNotificationsSettings() }
                                     ) {
                                         Icon(Icons.Filled.Settings, null)
                                     }
@@ -105,11 +105,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun openNotificationsConfig() {
+    private fun openNotificationsSettings() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS).apply {
+            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                 putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-                putExtra(Settings.EXTRA_CHANNEL_ID, CHANNEL_ID)
             }
             startActivity(intent)
         }

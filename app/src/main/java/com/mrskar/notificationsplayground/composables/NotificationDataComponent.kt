@@ -103,7 +103,9 @@ private fun DefaultPreview() {
             mutableStateOf(NotificationStyles.BIG_TEXT),
             mutableStateOf(NotificationTypes.STANDARD),
             mutableStateOf("https://despamers.com/"),
-            mutableStateOf(Uri.EMPTY))
+            mutableStateOf(Uri.EMPTY),
+            mutableStateOf(true)
+        )
     }
     NotificationDataComponent(notificationData)
 }

@@ -14,11 +14,13 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import com.mrskar.notificationsplayground.models.NotificationData
 import com.mrskar.notificationsplayground.models.NotificationStyles
 import com.mrskar.notificationsplayground.models.NotificationTypes
+import com.mrskar.notificationsplayground.ui.theme.BrandBlue
 import kotlin.random.Random
 
 interface CustomNotificationManager {
@@ -46,22 +48,29 @@ class CustomNotificationManagerImpl constructor(
     override fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (manager.getNotificationChannel(CHANNEL_ID_HIGH) == null) {
-                manager.createNotificationChannel(
-                    NotificationChannel(
+                val channel = NotificationChannel(
                         CHANNEL_ID_HIGH,
                         "High Priority Channel",
                         NotificationManager.IMPORTANCE_HIGH
-                    )
-                )
+                    ).apply {
+                    description = "This is for high priority notifications"
+                    lightColor = BrandBlue.toArgb()
+                    enableLights(true)
+                    enableVibration(true)
+                    vibrationPattern = longArrayOf(0, 100, 1000, 200, 2000)
+                }
+                manager.createNotificationChannel(channel)
             }
             if (manager.getNotificationChannel(CHANNEL_ID_LOW) == null) {
-                manager.createNotificationChannel(
-                    NotificationChannel(
-                        CHANNEL_ID_LOW,
-                        "Low Priority Channel",
-                        NotificationManager.IMPORTANCE_LOW
-                    )
-                )
+                val channel = NotificationChannel(
+                    CHANNEL_ID_LOW,
+                    "Low Priority Channel",
+                    NotificationManager.IMPORTANCE_LOW
+                ).apply {
+                    description = "This is for low priority notifications"
+                    enableVibration(false)
+                }
+                manager.createNotificationChannel(channel)
             }
             val groupId = "despamers_01"
             // The user-visible name of the group.

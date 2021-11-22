@@ -32,10 +32,11 @@ class CustomNotificationManagerImpl constructor(
     private var manager: NotificationManager =
         context.getSystemService(ComponentActivity.NOTIFICATION_SERVICE) as NotificationManager
 
-    private val trackingId = Random.nextInt(1000)
+    private var trackingId = 0
 
     override fun sendNotification(notificationData: NotificationData) {
         val notification = createNotificationWithData(notificationData)
+        trackingId = Random.nextInt(1000)
         manager.notify(
             trackingId,
             notification

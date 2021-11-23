@@ -39,13 +39,14 @@ class MainActivity : ComponentActivity() {
         val sharedPreferences = getSharedPreferences(
             getString(R.string.sharedpreferences_file), MODE_PRIVATE
         )
-        val isDarkMode = sharedPreferences.getBoolean(KEY_DARKMODE, false)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationManager.createNotificationChannel()
         }
         setContent {
             val icon = remember { mutableStateOf(Icons.Filled.FavoriteBorder) }
-            val (enableDarkMode, setDarkMode) = remember { mutableStateOf(isDarkMode) }
+            val (enableDarkMode, setDarkMode) = remember {
+                mutableStateOf(sharedPreferences.getBoolean(KEY_DARKMODE, false))
+            }
 
             NotificationsPlaygroundTheme(darkTheme = enableDarkMode) {
                 Scaffold(

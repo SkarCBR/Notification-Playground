@@ -52,7 +52,7 @@ private val DarkThemeColors = darkColors(
 
 @Composable
 fun NotificationsPlaygroundTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     content: @Composable() () -> Unit
 ) {
     val colors = if (darkTheme) {

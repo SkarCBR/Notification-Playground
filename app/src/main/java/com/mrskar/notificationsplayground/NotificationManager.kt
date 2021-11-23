@@ -1,13 +1,10 @@
 package com.mrskar.notificationsplayground
 
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -16,10 +13,8 @@ import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
-import androidx.core.app.TaskStackBuilder
 import com.mrskar.notificationsplayground.models.NotificationData
 import com.mrskar.notificationsplayground.models.NotificationStyles
-import com.mrskar.notificationsplayground.models.NotificationTypes
 import com.mrskar.notificationsplayground.ui.theme.BrandBlue
 import kotlin.random.Random
 
@@ -31,14 +26,14 @@ interface CustomNotificationManager {
 class CustomNotificationManagerImpl constructor(
     private val context: Context
 ) : CustomNotificationManager {
-    private var manager: NotificationManager =
+    private val manager: NotificationManager =
         context.getSystemService(ComponentActivity.NOTIFICATION_SERVICE) as NotificationManager
 
-    private var trackingId = 0
+    private val intentProvider = IntentProviderImpl(context)
 
     override fun sendNotification(notificationData: NotificationData) {
-        val notification = createNotificationWithData(notificationData)
-        trackingId = Random.nextInt(1000)
+        val trackingId = Random.nextInt(1000)
+        val notification = createNotificationWithData(notificationData, trackingId)
         manager.notify(
             trackingId,
             notification
@@ -49,10 +44,10 @@ class CustomNotificationManagerImpl constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (manager.getNotificationChannel(CHANNEL_ID_HIGH) == null) {
                 val channel = NotificationChannel(
-                        CHANNEL_ID_HIGH,
-                        "High Priority Channel",
-                        NotificationManager.IMPORTANCE_HIGH
-                    ).apply {
+                    CHANNEL_ID_HIGH,
+                    "High Priority Channel",
+                    NotificationManager.IMPORTANCE_HIGH
+                ).apply {
                     description = "This is for high priority notifications"
                     lightColor = BrandBlue.toArgb()
                     enableLights(true)
@@ -81,8 +76,7 @@ class CustomNotificationManagerImpl constructor(
         }
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
-    private fun createNotificationWithData(data: NotificationData): Notification {
+    private fun createNotificationWithData(data: NotificationData, trackingId: Int): Notification {
         val channelId = if (data.expanded.value) CHANNEL_ID_HIGH else CHANNEL_ID_LOW
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.android_masters)
@@ -90,8 +84,14 @@ class CustomNotificationManagerImpl constructor(
             .setAutoCancel(true)
             .setPriority(getPriority(data.expanded.value))
             .setContentText(data.message.value)
-            .setContentIntent(getPendingIntent(data.type.value, data.url.value))
             .setGroup(GROUP_KEY)
+            .setContentIntent(
+                intentProvider.getPendingIntent(
+                    data.type.value,
+                    data.url.value,
+                    trackingId
+                )
+            )
 
         setStyle(builder, data)
 
@@ -107,63 +107,6 @@ class CustomNotificationManagerImpl constructor(
             true -> NotificationCompat.PRIORITY_HIGH
             false -> NotificationCompat.PRIORITY_LOW
         }
-    }
-
-    private fun getPendingIntent(type: NotificationTypes, url: String): PendingIntent {
-        return when (type) {
-            NotificationTypes.STANDARD -> {
-                createPendingIntentWithBackStack(url)
-            }
-            NotificationTypes.SPECIAL -> {
-                createPendingIntentSingleTask(url)
-            }
-            NotificationTypes.DEEPLINK -> {
-                createPendingIntentActionView(url)
-            }
-        }
-    }
-
-    private fun createPendingIntentWithBackStack(url: String): PendingIntent {
-        val resultIntent = ResultActivity
-            .buildIntent(context, true, getSectionFromUrl(url))
-
-        return TaskStackBuilder.create(context).run {
-            addNextIntentWithParentStack(resultIntent)
-            getPendingIntent(trackingId, PendingIntent.FLAG_UPDATE_CURRENT)
-        } ?: PendingIntent.getActivity(
-            context,
-            trackingId,
-            resultIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
-    }
-
-    private fun createPendingIntentSingleTask(url: String): PendingIntent {
-        val notifyIntent = SpecialResultActivity
-            .buildIntent(context, true, getSectionFromUrl(url))
-            .apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-        return PendingIntent.getActivity(
-            context, trackingId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
-
-    private fun createPendingIntentActionView(url: String): PendingIntent {
-        return PendingIntent.getActivity(
-            context,
-            trackingId,
-            Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
-                putExtra(ARG_URL, url)
-                putExtra(ARG_SECTION, getSectionFromUrl(url))
-                putExtra(ARG_IS_NOTIFICATION, true)
-            },
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-    }
-
-    private fun getSectionFromUrl(url: String): String {
-        return url.substringAfter(".com/")
     }
 
     private fun setStyle(builder: NotificationCompat.Builder, data: NotificationData) {

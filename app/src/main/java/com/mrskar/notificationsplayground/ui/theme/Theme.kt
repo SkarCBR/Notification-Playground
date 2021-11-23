@@ -94,7 +94,7 @@ private fun DefaultPreview() {
                 )
             }
         ) {
-            NotificationsTestComponent { }
+            NotificationsTestComponent(deleteCount = 0) { }
         }
     }
 }

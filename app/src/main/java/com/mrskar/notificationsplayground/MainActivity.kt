@@ -82,7 +82,9 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    NotificationsTestComponent { notificationManager.sendNotification(it) }
+                    NotificationsTestComponent(
+                        sharedPreferences.getInt(KEY_DELETE_COUNT, 0)
+                    ) { notificationManager.sendNotification(it) }
                 }
             }
         }
@@ -155,7 +157,7 @@ private fun DefaultPreview() {
                 )
             }
         ) {
-            NotificationsTestComponent { }
+            NotificationsTestComponent(deleteCount = 0) { }
         }
     }
 }

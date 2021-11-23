@@ -35,6 +35,7 @@ import com.mrskar.notificationsplayground.ui.theme.NotificationsPlaygroundTheme
 
 @Composable
 fun NotificationsTestComponent(
+    deleteCount: Int,
     onButtonClick: (data: NotificationData) -> Unit
 ) {
     val notificationData = remember {
@@ -99,6 +100,7 @@ fun NotificationsTestComponent(
                         }
                     )
                 }
+                Text(text = "Deleted Notifications: $deleteCount")
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -119,6 +121,6 @@ fun NotificationsTestComponent(
 @Composable
 private fun DefaultPreview() {
     NotificationsPlaygroundTheme {
-        NotificationsTestComponent {}
+        NotificationsTestComponent(deleteCount = 0) {}
     }
 }

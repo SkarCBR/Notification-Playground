@@ -92,6 +92,7 @@ class CustomNotificationManagerImpl constructor(
                     trackingId
                 )
             )
+            .setDeleteIntent(intentProvider.getDeletePendingIntent(data.url.value))
 
         setStyle(builder, data)
 

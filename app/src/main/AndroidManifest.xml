@@ -9,12 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NotificationsPlayground">
+        <receiver
+            android:name=".NotificationDeleteBroadcastReceiver"
+            android:enabled="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.NotificationsPlayground.NoActionBar"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,23 +32,20 @@
 
                 <data
                     android:host="@string/deep_linking_host_com"
-                    android:scheme="@string/deep_linking_schema"
-                    />
+                    android:scheme="@string/deep_linking_schema" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ResultActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SpecialResultActivity"
-            android:launchMode="singleTask"
-            android:taskAffinity=""
             android:excludeFromRecents="true"
-            android:screenOrientation="portrait">
-        </activity>
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="" />
     </application>
 
 </manifest>

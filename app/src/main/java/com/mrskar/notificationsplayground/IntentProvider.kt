@@ -9,14 +9,18 @@ import com.mrskar.notificationsplayground.models.NotificationTypes
 
 interface IntentProvider {
     fun getPendingIntent(type: NotificationTypes, url: String, trackingId: Int): PendingIntent
+    fun getDeletePendingIntent(url: String): PendingIntent
 }
 
 class IntentProviderImpl(
     private val context: Context,
 ) : IntentProvider {
 
-    override fun getPendingIntent(type: NotificationTypes, url: String, trackingId: Int):
-        PendingIntent {
+    override fun getPendingIntent(
+        type: NotificationTypes,
+        url: String,
+        trackingId: Int
+    ): PendingIntent {
         return when (type) {
             NotificationTypes.STANDARD -> {
                 createPendingIntentWithBackStack(url, trackingId)
@@ -28,6 +32,15 @@ class IntentProviderImpl(
                 createPendingIntentActionView(url, trackingId)
             }
         }
+    }
+
+    override fun getDeletePendingIntent(url: String): PendingIntent {
+        val intent = Intent(context, NotificationDeleteBroadcastReceiver::class.java).apply {
+            putExtra(ARG_URL, url)
+            putExtra(ARG_SECTION, getSectionFromUrl(url))
+        }
+        return PendingIntent.getBroadcast(
+            context.applicationContext, 888, intent, PendingIntent.FLAG_IMMUTABLE)
     }
 
     private fun createPendingIntentWithBackStack(url: String, trackingId: Int): PendingIntent {

@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mrskar.notificationsplayground.ui.theme.NotificationsPlaygroundTheme
 
-class ResultActivity : ComponentActivity() {
+class ChildActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ class ResultActivity : ComponentActivity() {
                     scaffoldState = scaffoldState,
                     topBar = {
                         TopAppBar(
-                            title = { Text("Result Detail") },
+                            title = { Text("Child Activity") },
                             backgroundColor = MaterialTheme.colors.secondary,
                             actions = { },
                             navigationIcon = {
@@ -90,11 +90,13 @@ class ResultActivity : ComponentActivity() {
         fun buildIntent(
             context: Context,
             comingFromNotification: Boolean,
-            section: String?
+            section: String,
+            url: String
         ): Intent {
-            return Intent(context, ResultActivity::class.java).apply {
+            return Intent(context, ChildActivity::class.java).apply {
                 putExtra(ARG_IS_NOTIFICATION, comingFromNotification)
                 putExtra(ARG_SECTION, section)
+                putExtra(ARG_URL, url)
             }
         }
     }

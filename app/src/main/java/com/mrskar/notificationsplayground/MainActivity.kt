@@ -42,8 +42,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val section = intent.getStringExtra(ARG_SECTION) ?: ""
-        navigateToResult(section, intent.getBooleanExtra(ARG_IS_NOTIFICATION, false))
+        navigateToResult(
+            intent.getStringExtra(ARG_SECTION) ?: "",
+            intent.getStringExtra(ARG_URL) ?: "",
+            intent.getBooleanExtra(ARG_IS_NOTIFICATION, false)
+        )
         notificationManager = CustomNotificationManagerImpl(this)
         val sharedPreferences = getSharedPreferences(
             getString(R.string.sharedpreferences_file), MODE_PRIVATE
@@ -104,16 +107,21 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun navigateToResult(section: String?, comingFromNotification: Boolean) {
+    private fun navigateToResult(
+        section: String,
+        url: String,
+        comingFromNotification: Boolean
+    ) {
         when {
             section == "result" -> {
                 startActivity(
-                    ResultActivity.buildIntent(this, comingFromNotification, section)
+                    ChildActivity.buildIntent(this, comingFromNotification, section, url)
                 )
             }
             section == "special" -> {
                 startActivity(
-                    SpecialResultActivity.buildIntent(this, comingFromNotification, section).apply {
+                    SingleTaskActivity.buildIntent(this, comingFromNotification, section, url)
+                        .apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
                 )

@@ -22,14 +22,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.mrskar.notificationsplayground.composables.SpecialResultComponent
+import com.mrskar.notificationsplayground.composables.SingleTaskComponent
 import com.mrskar.notificationsplayground.ui.theme.NotificationsPlaygroundTheme
 
-class SpecialResultActivity : ComponentActivity() {
+class SingleTaskActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val section = intent.getStringExtra(ARG_SECTION) ?: ""
+        val url = intent.getStringExtra(ARG_URL) ?: ""
         val comingFromNotification = intent.getBooleanExtra(ARG_IS_NOTIFICATION, false)
         val isDarkMode = getSharedPreferences(
             getString(R.string.sharedpreferences_file), MODE_PRIVATE
@@ -41,7 +42,7 @@ class SpecialResultActivity : ComponentActivity() {
                     scaffoldState = scaffoldState,
                     topBar = {
                         TopAppBar(
-                            title = { Text("Special Detail") },
+                            title = { Text("Single Task Activity") },
                             backgroundColor = MaterialTheme.colors.secondary,
                             actions = { },
                             navigationIcon = {
@@ -54,7 +55,8 @@ class SpecialResultActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    SpecialResultComponent(
+                    SingleTaskComponent(
+                        url = url,
                         sectionToNavigate = section,
                         onBackButtonSelected = { goToApp() },
                         onSectionSelected = { goToResult(it) }
@@ -101,11 +103,13 @@ class SpecialResultActivity : ComponentActivity() {
         fun buildIntent(
             context: Context,
             comingFromNotification: Boolean,
-            section: String?
+            section: String,
+            url: String
         ): Intent {
-            return Intent(context, SpecialResultActivity::class.java).apply {
+            return Intent(context, SingleTaskActivity::class.java).apply {
                 putExtra(ARG_IS_NOTIFICATION, comingFromNotification)
                 putExtra(ARG_SECTION, section)
+                putExtra(ARG_URL, url)
             }
         }
     }
@@ -132,7 +136,8 @@ private fun DefaultPreview() {
                 )
             }
         ) {
-            SpecialResultComponent(
+            SingleTaskComponent(
+                url = "",
                 sectionToNavigate = "result",
                 onBackButtonSelected = { },
                 onSectionSelected = { }

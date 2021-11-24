@@ -44,8 +44,8 @@ class IntentProviderImpl(
     }
 
     private fun createPendingIntentWithBackStack(url: String, trackingId: Int): PendingIntent {
-        val resultIntent = ResultActivity
-            .buildIntent(context, true, getSectionFromUrl(url))
+        val resultIntent = ChildActivity
+            .buildIntent(context, true, getSectionFromUrl(url), url)
 
         return TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(resultIntent)
@@ -59,8 +59,8 @@ class IntentProviderImpl(
     }
 
     private fun createPendingIntentSingleTask(url: String, trackingId: Int): PendingIntent {
-        val notifyIntent = SpecialResultActivity
-            .buildIntent(context, true, getSectionFromUrl(url))
+        val notifyIntent = SingleTaskActivity
+            .buildIntent(context, true, getSectionFromUrl(url), url)
             .apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }

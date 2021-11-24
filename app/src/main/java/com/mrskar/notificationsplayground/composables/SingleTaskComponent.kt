@@ -17,7 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SpecialResultComponent(
+fun SingleTaskComponent(
+    url: String,
     sectionToNavigate: String,
     onBackButtonSelected: () -> Unit,
     onSectionSelected: (section: String) -> Unit,
@@ -89,7 +90,8 @@ fun SpecialResultComponent(
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {
-    SpecialResultComponent(
+    SingleTaskComponent(
+        url = "",
         sectionToNavigate = "result",
         onBackButtonSelected = { /*TODO*/ },
         onSectionSelected = {}

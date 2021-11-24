@@ -49,11 +49,18 @@ fun NotificationDataComponent(
                         maxLines = 2
                     )
                 }
-                BigTextMessageComponent(
-                    title = "Deeplink: ",
-                    message = notificationData.url,
-                    maxLines = 1
-                )
+                if (notificationData.type.value == NotificationTypes.DEEPLINK) {
+                    if (notificationData.url.value.isEmpty()) {
+                        notificationData.url.value = "https://despamers.com/"
+                    }
+                    BigTextMessageComponent(
+                        title = "Deeplink: ",
+                        message = notificationData.url,
+                        maxLines = 1
+                    )
+                } else {
+                    notificationData.url.value = ""
+                }
                 if (notificationData.style.value == NotificationStyles.BIG_PICTURE) {
                     Row(
                         Modifier

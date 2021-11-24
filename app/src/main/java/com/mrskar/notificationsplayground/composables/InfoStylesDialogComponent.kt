@@ -57,33 +57,27 @@ fun InfoStylesDialogComponent(openDialog: MutableState<Boolean>) {
 @Composable
 private fun InfoStylesDialogContent() {
     Column {
-        Row(Modifier.padding(4.dp)) {
+        Column(Modifier.padding(4.dp)) {
             Text(
-                text = "Big Text: ",
-                modifier = Modifier
-                    .fillMaxWidth(0.25f),
+                text = "Big Text",
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = stringResource(id = R.string.notification_style_bigtext),
             )
         }
-        Row(Modifier.padding(4.dp)) {
+        Column(Modifier.padding(4.dp)) {
             Text(
-                text = "Big Picture: ",
-                modifier = Modifier
-                    .fillMaxWidth(0.25f),
+                text = "Big Picture",
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = stringResource(id = R.string.notification_style_bigpicture),
             )
         }
-        Row(Modifier.padding(4.dp)) {
+        Column(Modifier.padding(4.dp)) {
             Text(
-                text = "Inbox: ",
-                modifier = Modifier
-                    .fillMaxWidth(0.25f),
+                text = "Inbox",
                 fontWeight = FontWeight.Bold
             )
             Text(

@@ -40,7 +40,7 @@ fun NotificationDataComponent(
                     BigTextMessageComponent(
                         title = "Message: ",
                         message = notificationData.message,
-                        maxLines = 4
+                        maxLines = 6
                     )
                 } else {
                     MultiLineMessageComponent(

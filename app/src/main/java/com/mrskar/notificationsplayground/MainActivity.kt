@@ -60,8 +60,8 @@ class MainActivity : ComponentActivity() {
             }
             val notificationData = remember {
                 NotificationData(
-                    mutableStateOf("Test title"),
-                    mutableStateOf("Test message"),
+                    mutableStateOf("Notification title"),
+                    mutableStateOf("Notification message"),
                     mutableStateListOf<MutableState<String>>(),
                     mutableStateOf(NotificationStyles.BIG_TEXT),
                     mutableStateOf(NotificationTypes.STANDARD),

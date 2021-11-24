@@ -53,6 +53,14 @@ fun SingleTaskComponent(
                         fontWeight = FontWeight.Bold
                     )
                 )
+                Text(
+                    modifier = Modifier
+                        .align(CenterHorizontally)
+                        .padding(16.dp),
+                    text = "Since this Activity was not added to Back Stack or Recents, when user " +
+                        "go back or close this screen it will be redirected to where it was when " +
+                        "notification was selected",
+                )
             }
         }
         Column(modifier = Modifier.align(CenterHorizontally)) {
@@ -66,7 +74,7 @@ fun SingleTaskComponent(
                 Column(horizontalAlignment = CenterHorizontally) {
                     Text(
                         text = "Open/Go to App main with no arguments.\n" +
-                            "Explicit Intent (MainActivity)!",
+                            "Explicit Intent to MainActivity.",
                         modifier = Modifier.padding(4.dp)
                     )
                     Button(

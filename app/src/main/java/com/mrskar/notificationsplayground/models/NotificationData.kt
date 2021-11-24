@@ -32,8 +32,8 @@ data class NotificationData(
             },\n")
             .plus("   priority = ${
                 if (expanded.value) "HIGH" else "LOW"
-            }\n)")
+            }\n")
             .plus("   url = ${url.value},\n")
-            .plus("   image = ${imageUri.value}\n")
+            .plus("   image = ${imageUri.value}\n)")
     }
 }

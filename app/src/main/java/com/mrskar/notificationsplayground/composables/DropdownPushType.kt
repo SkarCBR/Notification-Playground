@@ -35,7 +35,6 @@ import com.mrskar.notificationsplayground.ui.theme.NotificationsPlaygroundTheme
 fun DropdownPushType(onItemSelected: (NotificationTypes) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     val openDialog = remember { mutableStateOf(false) }
-    val defaultType = 2
     val items = listOf(
         NotificationTypes.STANDARD,
         NotificationTypes.SPECIAL,
@@ -51,7 +50,7 @@ fun DropdownPushType(onItemSelected: (NotificationTypes) -> Unit) {
         ) {
             TextField(
                 readOnly = true,
-                value = items[selectedIndex].name.lowercase().capitalize(),
+                value = items[selectedIndex].name.lowercase().replaceFirstChar { it.uppercase() },
                 onValueChange = {},
                 modifier = Modifier
                     .clickable(onClick = { expanded = true })
@@ -72,12 +71,7 @@ fun DropdownPushType(onItemSelected: (NotificationTypes) -> Unit) {
                         expanded = false
                         onItemSelected(item)
                     }) {
-                        val defaultSuffix = if (index == defaultType) {
-                            " (Default)"
-                        } else {
-                            ""
-                        }
-                        Text(text = item.name.lowercase().capitalize().plus(defaultSuffix))
+                        Text(text = item.name.lowercase().replaceFirstChar { it.uppercase() })
                     }
                 }
             }

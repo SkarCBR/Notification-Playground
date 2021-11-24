@@ -1,5 +1,6 @@
 package com.mrskar.notificationsplayground.composables
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,10 +12,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mrskar.notificationsplayground.R
 
 @Composable
 fun SingleTaskComponent(
@@ -27,33 +30,50 @@ fun SingleTaskComponent(
         Modifier
             .fillMaxSize()
             .padding(4.dp)) {
-        Text(
+        Card(
             modifier = Modifier
-                .align(CenterHorizontally)
-                .padding(16.dp),
-            text = "This is a Special Announcement!",
-            style = TextStyle(
-                fontWeight = FontWeight.Bold
-            )
-        )
+                .fillMaxWidth()
+                .padding(top = 4.dp, bottom = 4.dp)
+                .align(CenterHorizontally),
+            elevation = 4.dp
+        ) {
+            Column(horizontalAlignment = CenterHorizontally) {
+                Image(
+                    painter = painterResource(id = R.drawable.special_offer),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(CenterHorizontally)
+                )
+                Text(
+                    modifier = Modifier
+                        .align(CenterHorizontally)
+                        .padding(16.dp),
+                    text = "Hurry up, there is a special offer!",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            }
+        }
         Column(modifier = Modifier.align(CenterHorizontally)) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp, bottom = 4.dp)
                     .align(CenterHorizontally),
-                elevation
-                = 4.dp) {
+                elevation = 4.dp
+            ) {
                 Column(horizontalAlignment = CenterHorizontally) {
                     Text(
-                        text = "Back App Main with no arguments.",
+                        text = "Open/Go to App main with no arguments.\n" +
+                            "Explicit Intent (MainActivity)!",
                         modifier = Modifier.padding(4.dp)
                     )
                     Button(
                         onClick = { onBackButtonSelected() },
                         modifier = Modifier.padding(4.dp)
                     ) {
-                        Text(text = "Back to App")
+                        Text(text = "Go to App")
                     }
                 }
             }
@@ -66,17 +86,18 @@ fun SingleTaskComponent(
                     elevation = 4.dp) {
                     Column(horizontalAlignment = CenterHorizontally) {
                         Text(
-                            text = "This button will navigate to the App Section provided.\n" +
-                                "Intent arguments:\n" +
+                            text = "This button will navigate to the App Section provided with " +
+                                "this Intent arguments:\n" +
                                 " -comingFromNotification = false\n" +
-                                " -section = $sectionToNavigate",
+                                " -section = $sectionToNavigate" +
+                                " -url = $url",
                             modifier = Modifier
-                                .padding(4.dp)
+                                .padding(8.dp)
                                 .wrapContentSize()
                         )
                         Button(
                             onClick = { onSectionSelected(sectionToNavigate) },
-                            modifier = Modifier.padding(4.dp)
+                            modifier = Modifier.padding(8.dp)
                         ) {
                             Text(text = "Go to ".plus(sectionToNavigate.replaceFirstChar { it.uppercase() }))
                         }

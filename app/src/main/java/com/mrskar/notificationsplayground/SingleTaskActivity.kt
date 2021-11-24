@@ -17,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,7 +50,7 @@ class SingleTaskActivity : ComponentActivity() {
                                 IconButton(
                                     onClick = { onBackPressed() }
                                 ) {
-                                    Icon(Icons.Outlined.ArrowBack, null)
+                                    Icon(Icons.Outlined.Close, null)
                                 }
                             }
                         )

@@ -2,6 +2,8 @@
 This app is just intended to play a bit with some notifications configurations and check how they look and behave.<br>
 I might keep improving the app with more configurations, we'll see...<br>
 
+It uses Compose, the new Android UI: https://developer.android.com/jetpack/compose
+
 Feel free to download this code and modify it to your needs :)
 
 <b>Release</b><br>

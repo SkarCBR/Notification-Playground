@@ -12,7 +12,7 @@ data class NotificationData(
     val type: MutableState<NotificationTypes>,
     val url: MutableState<String>,
     val imageUri: MutableState<Uri>,
-    val expanded: MutableState<Boolean>,
+    val priority: MutableState<Boolean>,
 ) {
     override fun toString(): String {
         return javaClass.simpleName.plus("(\n")
@@ -31,7 +31,7 @@ data class NotificationData(
                     .replaceFirstChar { it.uppercase() }
             },\n")
             .plus("   priority = ${
-                if (expanded.value) "HIGH" else "LOW"
+                if (priority.value) "HIGH" else "LOW"
             }\n")
             .plus("   url = ${url.value},\n")
             .plus("   image = ${imageUri.value}\n)")

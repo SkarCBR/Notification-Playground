@@ -68,7 +68,7 @@ private fun InfoTypesDialogContent() {
         }
         Column(Modifier.padding(4.dp)) {
             Text(
-                text = "Special",
+                text = "Single Task",
                 fontWeight = FontWeight.Bold
             )
             Text(

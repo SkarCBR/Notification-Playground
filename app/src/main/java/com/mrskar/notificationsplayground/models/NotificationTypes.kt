@@ -2,6 +2,6 @@ package com.mrskar.notificationsplayground.models
 
 enum class NotificationTypes {
     STANDARD,
-    SPECIAL,
+    SINGLE_TASK,
     DEEPLINK,
 }

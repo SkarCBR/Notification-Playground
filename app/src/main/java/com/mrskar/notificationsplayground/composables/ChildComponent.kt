@@ -38,6 +38,16 @@ fun ChildComponent(
             elevation = 4.dp
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(16.dp),
+                    text = "Welcome to a standard Result screen, " +
+                        "use your imagination to fill it up...",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
                 Image(
                     painter = painterResource(id = R.drawable.result_image),
                     contentDescription = null,
@@ -48,8 +58,15 @@ fun ChildComponent(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(16.dp),
-                    text = "Welcome to a standard Result screen, use your imagination...\n\n" +
-                        "Back goes to parent MainActivity (finish this one)",
+                    text = "This activity was open using an Implicit Intent with flag " +
+                        "FLAG_UPDATE_CURRENT\n\n" +
+                        "But adding it to Back Stack with its Parent (declared on App Manifest)"
+                )
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(16.dp),
+                    text = "Back goes to parent MainActivity (finish this one)",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold
                     )

@@ -113,12 +113,12 @@ class MainActivity : ComponentActivity() {
         comingFromNotification: Boolean
     ) {
         when {
-            section == "result" -> {
+            section == "child" -> {
                 startActivity(
                     ChildActivity.buildIntent(this, comingFromNotification, section, url)
                 )
             }
-            section == "special" -> {
+            section == "singletask" -> {
                 startActivity(
                     SingleTaskActivity.buildIntent(this, comingFromNotification, section, url)
                         .apply {

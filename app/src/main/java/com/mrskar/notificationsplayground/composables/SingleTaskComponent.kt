@@ -97,7 +97,7 @@ fun SingleTaskComponent(
                             text = "This button will navigate to the App Section provided with " +
                                 "this Intent arguments:\n" +
                                 " -comingFromNotification = false\n" +
-                                " -section = $sectionToNavigate" +
+                                " -section = $sectionToNavigate\n" +
                                 " -url = $url",
                             modifier = Modifier
                                 .padding(8.dp)

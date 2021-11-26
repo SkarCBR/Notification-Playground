@@ -25,7 +25,7 @@ class IntentProviderImpl(
             NotificationTypes.STANDARD -> {
                 createPendingIntentWithBackStack(url, trackingId)
             }
-            NotificationTypes.SPECIAL -> {
+            NotificationTypes.SINGLE_TASK -> {
                 createPendingIntentSingleTask(url, trackingId)
             }
             NotificationTypes.DEEPLINK -> {
@@ -35,12 +35,12 @@ class IntentProviderImpl(
     }
 
     override fun getDeletePendingIntent(url: String): PendingIntent {
-        val intent = Intent(context, NotificationDeleteBroadcastReceiver::class.java).apply {
-            putExtra(ARG_URL, url)
-            putExtra(ARG_SECTION, getSectionFromUrl(url))
-        }
         return PendingIntent.getBroadcast(
-            context.applicationContext, 888, intent, PendingIntent.FLAG_IMMUTABLE)
+            context.applicationContext,
+            888,
+            Intent(context, NotificationDeleteBroadcastReceiver::class.java),
+            PendingIntent.FLAG_IMMUTABLE
+        )
     }
 
     private fun createPendingIntentWithBackStack(url: String, trackingId: Int): PendingIntent {
@@ -49,13 +49,13 @@ class IntentProviderImpl(
 
         return TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(resultIntent)
-            getPendingIntent(trackingId, PendingIntent.FLAG_UPDATE_CURRENT)
-        } ?: PendingIntent.getActivity(
-            context,
-            trackingId,
-            resultIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
+            PendingIntent.getActivity(
+                context,
+                trackingId,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
     }
 
     private fun createPendingIntentSingleTask(url: String, trackingId: Int): PendingIntent {
@@ -83,6 +83,10 @@ class IntentProviderImpl(
     }
 
     private fun getSectionFromUrl(url: String): String {
-        return url.substringAfter(".com/")
+        return if (url.contains(".com/")) {
+            url.substringAfter(".com/")
+        } else {
+            url.substringAfter("://")
+        }
     }
 }

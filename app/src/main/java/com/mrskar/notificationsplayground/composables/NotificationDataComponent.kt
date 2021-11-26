@@ -92,7 +92,8 @@ fun NotificationDataComponent(
                 Text(
                     text = "Intent arguments:\n" +
                         " - comingFromNotification = true\n" +
-                        " - section = ${notificationData.url.value.substringAfter(".com/", "")}"
+                        " - section = ${notificationData.url.value.substringAfter(".com/", "")}\n" +
+                        " - url = ${notificationData.url.value}"
                 )
             }
         }

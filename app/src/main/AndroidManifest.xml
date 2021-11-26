@@ -34,14 +34,24 @@
                     android:host="@string/deep_linking_host_com"
                     android:scheme="@string/deep_linking_schema" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="despamers" />
+            </intent-filter>
         </activity>
         <activity
-            android:name=".ResultActivity"
+            android:name=".ChildActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
-            android:name=".SpecialResultActivity"
+            android:name=".SingleTaskActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

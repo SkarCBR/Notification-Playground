@@ -2,29 +2,38 @@ package com.mrskar.notificationsplayground
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.FloatingActionButtonDefaults
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.mrskar.notificationsplayground.composables.NotificationsTestComponent
+import com.mrskar.notificationsplayground.composables.TopAppBarComponent
+import com.mrskar.notificationsplayground.models.NotificationData
+import com.mrskar.notificationsplayground.models.NotificationStyles
+import com.mrskar.notificationsplayground.models.NotificationTypes
 import com.mrskar.notificationsplayground.ui.theme.NotificationsPlaygroundTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,8 +42,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val section = intent.getStringExtra(ARG_SECTION) ?: ""
-        navigateToResult(section, intent.getBooleanExtra(ARG_IS_NOTIFICATION, false))
+        navigateToResult(
+            intent.getStringExtra(ARG_SECTION) ?: "",
+            intent.getStringExtra(ARG_URL) ?: "",
+            intent.getBooleanExtra(ARG_IS_NOTIFICATION, false)
+        )
         notificationManager = CustomNotificationManagerImpl(this)
         val sharedPreferences = getSharedPreferences(
             getString(R.string.sharedpreferences_file), MODE_PRIVATE
@@ -43,9 +55,20 @@ class MainActivity : ComponentActivity() {
             notificationManager.createNotificationChannel()
         }
         setContent {
-            val icon = remember { mutableStateOf(Icons.Filled.FavoriteBorder) }
             val (enableDarkMode, setDarkMode) = remember {
                 mutableStateOf(sharedPreferences.getBoolean(KEY_DARKMODE, false))
+            }
+            val notificationData = remember {
+                NotificationData(
+                    mutableStateOf("Notification title"),
+                    mutableStateOf("Notification message"),
+                    mutableStateListOf<MutableState<String>>(),
+                    mutableStateOf(NotificationStyles.BIG_TEXT),
+                    mutableStateOf(NotificationTypes.STANDARD),
+                    mutableStateOf("https://despamers.com/"),
+                    mutableStateOf(Uri.EMPTY),
+                    mutableStateOf(true)
+                )
             }
 
             NotificationsPlaygroundTheme(darkTheme = enableDarkMode) {
@@ -53,54 +76,52 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     scaffoldState = rememberScaffoldState(),
                     topBar = {
-                        TopAppBar(
-                            title = { Text("Notifications Playground") },
-                            backgroundColor = MaterialTheme.colors.secondary,
-                            actions = {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    IconButton(
-                                        onClick = { openNotificationsSettings() }
-                                    ) {
-                                        Icon(Icons.Filled.Settings, null)
-                                    }
-                                }
-                                IconButton(
-                                    onClick = {
-                                        setDarkMode(!enableDarkMode)
-                                        sharedPreferences.edit()
-                                            .putBoolean(KEY_DARKMODE, !enableDarkMode)
-                                            .apply()
-                                        if (icon.value == Icons.Filled.FavoriteBorder) {
-                                            icon.value = Icons.Filled.Favorite
-                                        } else {
-                                            icon.value = Icons.Filled.FavoriteBorder
-                                        }
-                                    }
-                                ) {
-                                    Icon(icon.value, null)
-                                }
-                            }
+                        TopAppBarComponent(
+                            onDarkModeChange = {
+                                setDarkMode(!enableDarkMode)
+                                sharedPreferences.edit()
+                                    .putBoolean(KEY_DARKMODE, !enableDarkMode)
+                                    .apply()
+                            },
+                            onConfigSelected = { openNotificationsSettings() }
                         )
                     }
                 ) {
-                    NotificationsTestComponent(
-                        sharedPreferences.getInt(KEY_DELETE_COUNT, 0)
-                    ) { notificationManager.sendNotification(it) }
+                    Box {
+                        NotificationsTestComponent(
+                            notificationData,
+                            sharedPreferences.getInt(KEY_DELETE_COUNT, 0)
+                        )
+                        ExtendedFloatingActionButton(
+                            modifier = Modifier
+                                .align(BottomCenter)
+                                .padding(top = 16.dp, bottom = 16.dp),
+                            icon = { Icon(Icons.Filled.Notifications, "") },
+                            text = { Text("Send Notification") },
+                            onClick = { notificationManager.sendNotification(notificationData) },
+                            elevation = FloatingActionButtonDefaults.elevation(8.dp)
+                        )
+                    }
                 }
             }
         }
     }
 
-    private fun navigateToResult(section: String?, comingFromNotification: Boolean) {
+    private fun navigateToResult(
+        section: String,
+        url: String,
+        comingFromNotification: Boolean
+    ) {
         when {
-            section == "result" -> {
+            section == "child" -> {
                 startActivity(
-                    ResultActivity.buildIntent(this, comingFromNotification, section)
+                    ChildActivity.buildIntent(this, comingFromNotification, section, url)
                 )
             }
-            section == "special" -> {
+            section == "singletask" -> {
                 startActivity(
-                    SpecialResultActivity.buildIntent(this, comingFromNotification, section).apply {
+                    SingleTaskActivity.buildIntent(this, comingFromNotification, section, url)
+                        .apply {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
                 )
@@ -136,29 +157,27 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 private fun DefaultPreview() {
-    val (enableDarkMode, setDarkMode) = remember { mutableStateOf(false) }
-    var changeThemeIcon = Icons.Filled.FavoriteBorder
+    val enableDarkMode by remember { mutableStateOf(false) }
+    val notificationData = remember {
+        NotificationData(
+            mutableStateOf("Test title"),
+            mutableStateOf("Test message"),
+            mutableStateListOf<MutableState<String>>(),
+            mutableStateOf(NotificationStyles.BIG_TEXT),
+            mutableStateOf(NotificationTypes.STANDARD),
+            mutableStateOf("https://despamers.com/"),
+            mutableStateOf(Uri.EMPTY),
+            mutableStateOf(true)
+        )
+    }
     NotificationsPlaygroundTheme(darkTheme = enableDarkMode) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                TopAppBar(
-                    title = { Text("Notifications Playground") },
-                    backgroundColor = MaterialTheme.colors.secondary,
-                    actions = {
-                        IconButton(
-                            onClick = {
-                                setDarkMode(!enableDarkMode)
-                                changeThemeIcon = Icons.Filled.Favorite
-                            }
-                        ) {
-                            Icon(changeThemeIcon, null)
-                        }
-                    }
-                )
+                TopAppBarComponent({ }, { })
             }
         ) {
-            NotificationsTestComponent(deleteCount = 0) { }
+            NotificationsTestComponent(notificationData = notificationData, deleteCount = 0)
         }
     }
 }

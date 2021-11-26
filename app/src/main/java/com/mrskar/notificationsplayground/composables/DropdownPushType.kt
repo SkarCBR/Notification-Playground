@@ -1,19 +1,14 @@
 package com.mrskar.notificationsplayground.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuBox
 import androidx.compose.material.ExposedDropdownMenuDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
@@ -26,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.mrskar.notificationsplayground.models.NotificationTypes
 import com.mrskar.notificationsplayground.ui.theme.NotificationsPlaygroundTheme
 
@@ -35,10 +29,9 @@ import com.mrskar.notificationsplayground.ui.theme.NotificationsPlaygroundTheme
 fun DropdownPushType(onItemSelected: (NotificationTypes) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     val openDialog = remember { mutableStateOf(false) }
-    val defaultType = 2
     val items = listOf(
         NotificationTypes.STANDARD,
-        NotificationTypes.SPECIAL,
+        NotificationTypes.SINGLE_TASK,
         NotificationTypes.DEEPLINK,
     )
     var selectedIndex by remember { mutableStateOf(0) }
@@ -51,7 +44,9 @@ fun DropdownPushType(onItemSelected: (NotificationTypes) -> Unit) {
         ) {
             TextField(
                 readOnly = true,
-                value = items[selectedIndex].name.lowercase().capitalize(),
+                value = items[selectedIndex].name.lowercase()
+                    .replaceFirstChar { it.uppercase() }
+                    .replace("_", " "),
                 onValueChange = {},
                 modifier = Modifier
                     .clickable(onClick = { expanded = true })
@@ -72,12 +67,10 @@ fun DropdownPushType(onItemSelected: (NotificationTypes) -> Unit) {
                         expanded = false
                         onItemSelected(item)
                     }) {
-                        val defaultSuffix = if (index == defaultType) {
-                            " (Default)"
-                        } else {
-                            ""
-                        }
-                        Text(text = item.name.lowercase().capitalize().plus(defaultSuffix))
+                        Text(text = item.name.lowercase()
+                            .replaceFirstChar { it.uppercase() }
+                            .replace("_", " ")
+                        )
                     }
                 }
             }

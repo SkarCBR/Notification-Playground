@@ -29,7 +29,6 @@ import com.mrskar.notificationsplayground.ui.theme.NotificationsPlaygroundTheme
 fun DropdownPushStyle(onItemSelected: (NotificationStyles) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     val openDialog = remember { mutableStateOf(false) }
-    val defaultStyle = 0
     val items = listOf(
         NotificationStyles.BIG_TEXT,
         NotificationStyles.BIG_PICTURE,
@@ -68,15 +67,9 @@ fun DropdownPushStyle(onItemSelected: (NotificationStyles) -> Unit) {
                         expanded = false
                         onItemSelected(item)
                     }) {
-                        val defaultSuffix = if (index == defaultStyle) {
-                            " (Default)"
-                        } else {
-                            ""
-                        }
-                        Text(text = item.name.lowercase().lowercase()
+                        Text(text = item.name.lowercase()
                             .replaceFirstChar { it.uppercase() }
                             .replace("_", " ")
-                            .plus(defaultSuffix)
                         )
                     }
                 }

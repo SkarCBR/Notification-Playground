@@ -53,7 +53,7 @@ fun NotificationConfigComponent(
             }
             Row(Modifier.fillMaxWidth()) {
                 Text(
-                    text = if (notificationData.expanded.value) {
+                    text = if (notificationData.priority.value) {
                         "High Priority Channel"
                     } else {
                         "Low Priority Channel"
@@ -61,9 +61,9 @@ fun NotificationConfigComponent(
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
                 Checkbox(
-                    checked = notificationData.expanded.value,
+                    checked = notificationData.priority.value,
                     onCheckedChange = {
-                        notificationData.expanded.value = !notificationData.expanded.value
+                        notificationData.priority.value = !notificationData.priority.value
                     }
                 )
             }

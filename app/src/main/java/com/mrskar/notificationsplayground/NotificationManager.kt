@@ -77,12 +77,12 @@ class CustomNotificationManagerImpl constructor(
     }
 
     private fun createNotificationWithData(data: NotificationData, trackingId: Int): Notification {
-        val channelId = if (data.expanded.value) CHANNEL_ID_HIGH else CHANNEL_ID_LOW
+        val channelId = if (data.priority.value) CHANNEL_ID_HIGH else CHANNEL_ID_LOW
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.android_masters)
             .setContentTitle(data.title.value)
             .setAutoCancel(true)
-            .setPriority(getPriority(data.expanded.value))
+            .setPriority(getPriority(data.priority.value))
             .setContentText(data.message.value)
             .setGroup(GROUP_KEY)
             .setContentIntent(

@@ -60,8 +60,6 @@ private fun InfoTypesDialogContent() {
         Column(Modifier.padding(4.dp)) {
             Text(
                 text = "Standard",
-                modifier = Modifier
-                    .fillMaxWidth(0.25f),
                 fontWeight = FontWeight.Bold
             )
             Text(
@@ -70,9 +68,7 @@ private fun InfoTypesDialogContent() {
         }
         Column(Modifier.padding(4.dp)) {
             Text(
-                text = "Special",
-                modifier = Modifier
-                    .fillMaxWidth(0.25f),
+                text = "Single Task",
                 fontWeight = FontWeight.Bold
             )
             Text(
@@ -82,8 +78,6 @@ private fun InfoTypesDialogContent() {
         Column(Modifier.padding(4.dp)) {
             Text(
                 text = "Deeplink",
-                modifier = Modifier
-                    .fillMaxWidth(0.25f),
                 fontWeight = FontWeight.Bold
             )
             Text(

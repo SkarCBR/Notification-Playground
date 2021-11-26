@@ -9,20 +9,23 @@
     <string name="notification_styles">Notification Styles</string>
 
     <string name="notification_type_standard_text">
-        Implicit Intent. Opens destination Activity with back button to Main/Parent,
+        Explicit Intent to ChildActivity. Opens destination Activity with back button to
+        Main/Parent,
         adding destination Activity to the top of Back Stack
     </string>
     <string name="notification_type_special_text">
-        Implicit Intent. Opens single task destination Activity without adding it to Back Stack,
+        Explicit Intent to SingleTaskActivity. Opens single task destination Activity without
+        adding it to Back Stack,
         back goes where user was (might be other app)
     </string>
     <string name="notification_type_deeplink_text">
-        Explicit Intent. System will look for a suitable App to open the provided URL/URI (Default).
+        Implicit Intent. System will look for a suitable App to perform the action with the
+        provided URL/URI host and schema.
         Will show a chooser to the user to select the app to do the action.
     </string>
 
     <string name="notification_style_bigtext">
-        Large-format notifications that include a lot of text (Default)
+        Large-format notifications that include a lot of text
     </string>
     <string name="notification_style_bigpicture">
         Large-format notifications that include a large image attachment.

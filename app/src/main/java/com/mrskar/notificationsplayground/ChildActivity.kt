@@ -6,39 +6,29 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.mrskar.notificationsplayground.composables.ChildComponent
 import com.mrskar.notificationsplayground.ui.theme.NotificationsPlaygroundTheme
 
-class ResultActivity : ComponentActivity() {
+class ChildActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isDarkMode = getSharedPreferences(
             getString(R.string.sharedpreferences_file), MODE_PRIVATE
         ).getBoolean(KEY_DARKMODE, false)
-        val comingFromNotification = intent.getBooleanExtra(ARG_IS_NOTIFICATION, false)
         setContent {
             val scaffoldState = rememberScaffoldState()
             NotificationsPlaygroundTheme(darkTheme = isDarkMode) {
@@ -46,7 +36,7 @@ class ResultActivity : ComponentActivity() {
                     scaffoldState = scaffoldState,
                     topBar = {
                         TopAppBar(
-                            title = { Text("Result Detail") },
+                            title = { Text("Child Activity") },
                             backgroundColor = MaterialTheme.colors.secondary,
                             actions = { },
                             navigationIcon = {
@@ -59,27 +49,10 @@ class ResultActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = "This is an Announcement!",
-                        style = TextStyle(fontWeight = FontWeight.Bold)
+                    ChildComponent(
+                        comingFromNotification = intent.getBooleanExtra(ARG_IS_NOTIFICATION, false),
+                        scaffoldState = scaffoldState
                     )
-
-                    LaunchedEffect(comingFromNotification) {
-                        if (comingFromNotification) {
-                            val result = scaffoldState.snackbarHostState.showSnackbar(
-                                message = "Notification selected!",
-                                actionLabel = "Dismiss",
-                                duration = SnackbarDuration.Short
-                            )
-                            when (result) {
-                                SnackbarResult.Dismissed -> {
-                                }
-                                SnackbarResult.ActionPerformed -> {
-                                }
-                            }
-                        }
-                    }
                 }
                 BackHandler(enabled = true, onBack = { finish() })
             }
@@ -90,11 +63,13 @@ class ResultActivity : ComponentActivity() {
         fun buildIntent(
             context: Context,
             comingFromNotification: Boolean,
-            section: String?
+            section: String,
+            url: String
         ): Intent {
-            return Intent(context, ResultActivity::class.java).apply {
+            return Intent(context, ChildActivity::class.java).apply {
                 putExtra(ARG_IS_NOTIFICATION, comingFromNotification)
                 putExtra(ARG_SECTION, section)
+                putExtra(ARG_URL, url)
             }
         }
     }
@@ -122,16 +97,7 @@ private fun DefaultPreview() {
                 )
             }
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = "This is an Announcement!",
-                    style = TextStyle(fontWeight = FontWeight.Bold)
-                )
-            }
+            ChildComponent(comingFromNotification = false, scaffoldState = scaffoldState)
         }
         BackHandler(enabled = true, onBack = { })
     }

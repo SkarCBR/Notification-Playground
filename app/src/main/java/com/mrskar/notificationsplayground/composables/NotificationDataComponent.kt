@@ -40,7 +40,7 @@ fun NotificationDataComponent(
                     BigTextMessageComponent(
                         title = "Message: ",
                         message = notificationData.message,
-                        maxLines = 4
+                        maxLines = 6
                     )
                 } else {
                     MultiLineMessageComponent(
@@ -49,11 +49,18 @@ fun NotificationDataComponent(
                         maxLines = 2
                     )
                 }
-                BigTextMessageComponent(
-                    title = "Deeplink: ",
-                    message = notificationData.url,
-                    maxLines = 1
-                )
+                if (notificationData.type.value == NotificationTypes.DEEPLINK) {
+                    if (notificationData.url.value.isEmpty()) {
+                        notificationData.url.value = "https://despamers.com/"
+                    }
+                    BigTextMessageComponent(
+                        title = "Deeplink: ",
+                        message = notificationData.url,
+                        maxLines = 1
+                    )
+                } else {
+                    notificationData.url.value = ""
+                }
                 if (notificationData.style.value == NotificationStyles.BIG_PICTURE) {
                     Row(
                         Modifier
@@ -85,7 +92,8 @@ fun NotificationDataComponent(
                 Text(
                     text = "Intent arguments:\n" +
                         " - comingFromNotification = true\n" +
-                        " - section = ${notificationData.url.value.substringAfter(".com/", "")}"
+                        " - section = ${notificationData.url.value.substringAfter(".com/", "")}\n" +
+                        " - url = ${notificationData.url.value}"
                 )
             }
         }
